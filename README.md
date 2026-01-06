@@ -12,8 +12,18 @@
 
 ## Project setup
 
-```bash
-$ npm install
+
+1. clonar el repositorio
+2. ejecutar 
+  ```npm install```
+3. Tener NEst CLI instalado
+```npm i -g @nestjs/cli```
+
+
+4. levantr la base de datos 
+```docker-compose up -d```
+
+
 ```
 
 ## Compile and run the project
