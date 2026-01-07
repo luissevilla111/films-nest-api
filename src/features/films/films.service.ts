@@ -1,11 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { CreateFilmDto } from './dto/create-film.dto';
 import { UpdateFilmDto } from './dto/update-film.dto';
-
+import { InjectModel } from '@nestjs/mongoose';
+import { Film } from './entities/film.entity';
+import { Model } from 'mongoose';
 @Injectable()
 export class FilmsService {
-  create(createFilmDto: CreateFilmDto) {
-    return 'This action adds a new film';
+  constructor(@InjectModel(Film.name) private filmModel: Model<Film>) {}
+
+  async create(createFilmDto: CreateFilmDto) {
+    const newFilm = { ...createFilmDto, addedBy: 'luis' };
+    return this.filmModel.create(newFilm);
   }
 
   findAll() {

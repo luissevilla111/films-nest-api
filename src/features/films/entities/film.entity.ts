@@ -6,13 +6,13 @@ export class Film extends Document {
   @Prop({ required: true, unique: true, index: true })
   name: string;
 
-  @Prop({ required: true, type: String })
+  @Prop({ required: true, type: String, default: 'ai' })
   description: string;
 
   @Prop({ required: true, type: Number })
   yearLaunch: number;
 
-  @Prop({ required: false, type: String })
+  @Prop({ required: true, type: String, default: 'ai' })
   director: string;
 
   @Prop({ required: true, type: String })
@@ -21,14 +21,14 @@ export class Film extends Document {
   @Prop({ required: true, type: [String] })
   keywords: string[];
 
-  @Prop({ required: true, type: Number })
-  duration: number;
+  @Prop({ required: false, type: Number })
+  duration?: number;
 
-  @Prop({ required: false, type: String })
+  @Prop({ required: true, type: String, default: '-' })
   watchedDay: string;
 
   @Prop({ required: false, type: String })
-  recommendatedBy: string;
+  recommendatedBy?: string;
 
   @Prop({ required: true, type: [String] })
   genres: string[];
@@ -36,14 +36,13 @@ export class Film extends Document {
   @Prop({ required: true, type: String })
   owner: string;
 
-  @Prop({ required: true, type: Boolean })
-  isWatched: boolean;
+  @Prop({ required: false, type: Boolean, default: false })
+  isWatched?: boolean;
 
-  @Prop({ required: false, type: String })
   @Prop({ required: true, type: String })
   addedBy: string;
 
-  @Prop({ required: true, type: String })
+  @Prop({ required: true, type: String, default: 'cinema' })
   group: string;
 }
 export const FilmSchema = SchemaFactory.createForClass(Film);
