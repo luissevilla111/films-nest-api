@@ -14,7 +14,7 @@ export class FilmsService {
   }
 
   findAll() {
-    return `This action returns all films`;
+    return this.filmModel.find().select('-__v');
   }
 
   findOne(id: number) {

@@ -24,11 +24,6 @@ export class CreateFilmDto {
   @Transform(({ value }) => value.trim().toUpperCase())
   name: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @IsOptional()
-  description: string;
-
   @IsInt()
   @Min(1888) // primera película de la historia 😉
   @Max(MAX_YEAR_LAUNCH)
