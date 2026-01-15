@@ -22,6 +22,14 @@ async function bootstrap() {
     .setVersion('1.0')
     .build();
 
+  //cors
+
+  app.enableCors({
+    origin: '*',
+    methods: ['*'],
+    //allowedHeaders: ['Content-Type', 'Authorization'],
+  });
+
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
 
