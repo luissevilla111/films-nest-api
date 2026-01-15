@@ -10,6 +10,7 @@ import {
 import { PeopleService } from './people.service';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
+import { MongoIdPipe } from 'src/shared/pipes/mongo-id.pipe';
 
 @Controller('people')
 export class PeopleController {
@@ -26,17 +27,20 @@ export class PeopleController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.peopleService.findOne(+id);
+  findOne(@Param('id', MongoIdPipe) id: string) {
+    return this.peopleService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePersonDto: UpdatePersonDto) {
-    return this.peopleService.update(+id, updatePersonDto);
+  update(
+    @Param('id', MongoIdPipe) id: string,
+    @Body() updatePersonDto: UpdatePersonDto,
+  ) {
+    return this.peopleService.update(id, updatePersonDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.peopleService.remove(+id);
+  remove(@Param('id', MongoIdPipe) id: string) {
+    return this.peopleService.remove(id);
   }
 }
