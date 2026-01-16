@@ -21,10 +21,16 @@ export class Film extends Document {
   @Prop({ required: true, type: [String] })
   keywords: string[];
 
+  @Prop({ required: true, type: [String] })
+  alternativeNames: string[];
+
+  @Prop({ required: true, type: [String] })
+  actors: string[];
+
   @Prop({ required: false, type: Number })
   duration?: number;
 
-  @Prop({ required: true, type: String, default: '-' })
+  @Prop({ required: true, type: String, default: '' })
   watchedDay: string;
 
   @Prop({ required: false, type: String })
@@ -36,8 +42,8 @@ export class Film extends Document {
   @Prop({ required: true, type: String })
   owner: string;
 
-  @Prop({ required: false, type: Boolean, default: false })
-  isWatched?: boolean;
+  @Prop({ required: true, type: Boolean, default: false })
+  isWatched: boolean;
 
   @Prop({ required: true, type: String })
   addedBy: string;

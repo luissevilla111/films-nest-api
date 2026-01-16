@@ -13,19 +13,28 @@ export class FilmsService {
     private readonly s3: S3Service,
   ) {}
 
-  async create(createFilmDto: CreateFilmDto, file: UploadedFile) {
+  create(createFilmDto: CreateFilmDto, file: UploadedFile) {
+    console.log(createFilmDto);
+
+    const description = createFilmDto.description;
+
+    if (!description) {
+      // generate description using AI
+    }
+
+    return 'Film created successfully';
     // Aquí puedes procesar el archivo si es necesario
     // Por ejemplo, guardarlo en el sistema de archivos o subirlo a un servicio de almacenamiento
     // Por ahora, solo lo incluimos en el objeto si existe
 
-    await this.s3.putObject(file.originalname, file.buffer, file.mimetype);
+    /* await this.s3.putObject(file.originalname, file.buffer, file.mimetype);
     const newFilm = {
       ...createFilmDto,
       addedBy: 'luis', // o obtenerlo del contexto de autenticación
       // Si hay un archivo, podrías guardar la ruta o URL aquí
       // imageUrl: file ? await this.saveFile(file) : createFilmDto.imageUrl,
     };
-    return this.filmModel.create(newFilm);
+    return this.filmModel.create(newFilm); */
   }
 
   findAll() {
