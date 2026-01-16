@@ -1,0 +1,3 @@
+export const PROMPT_TYPES = {
+  FILM_DESCRIPTION: 'FILM_DESCRIPTION',
+};
