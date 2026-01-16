@@ -11,11 +11,15 @@ import {
   MaxLength,
   Max,
   ArrayMaxSize,
+  ArrayMinSize,
 } from 'class-validator';
+import { normalizeArrayFormValue } from 'src/features/helpers/string.transform';
 
 const yearSpace = 2;
 const MAX_YEAR_LAUNCH = new Date().getFullYear() + yearSpace;
 const MAX_KEYWORDS = 5;
+const MAX_GENRES = 3;
+const MIN_GENRES = 2;
 
 export class CreateFilmDto {
   @IsString()
@@ -24,23 +28,21 @@ export class CreateFilmDto {
   @Transform(({ value }) => value.trim().toUpperCase())
   name: string;
 
+  @Transform(({ value }) => +value)
   @IsInt()
   @Min(1888) // primera película de la historia 😉
   @Max(MAX_YEAR_LAUNCH)
   yearLaunch: number;
 
-  @IsUrl()
-  imageUrl: string;
-
   @IsArray()
   @ArrayMaxSize(MAX_KEYWORDS)
   @IsString({ each: true })
   @IsNotEmpty({ each: true })
-  @Transform(({ value }) =>
-    value.map((keyword: string) => keyword.trim().toUpperCase()),
-  )
+  @ArrayMinSize(2)
+  @Transform(({ value }) => normalizeArrayFormValue(value))
   keywords: string[];
 
+  @Transform(({ value }) => +value)
   @IsInt()
   @Min(1)
   @IsOptional()
@@ -55,11 +57,11 @@ export class CreateFilmDto {
   recommendatedBy?: string;
 
   @IsArray()
+  @ArrayMinSize(MIN_GENRES)
+  @ArrayMaxSize(MAX_GENRES)
   @IsString({ each: true })
   @IsNotEmpty({ each: true })
-  @Transform(({ value }) =>
-    value.map((genre: string) => genre.trim().toUpperCase()),
-  )
+  @Transform(({ value }) => normalizeArrayFormValue(value))
   genres: string[];
 
   @IsString()
@@ -67,6 +69,7 @@ export class CreateFilmDto {
   // whose film is it? luis or selva
   owner: string;
 
+  @Transform(({ value }) => Boolean(value))
   @IsBoolean()
   @IsOptional()
   isWatched?: boolean;
