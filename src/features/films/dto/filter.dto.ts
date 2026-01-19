@@ -1,4 +1,4 @@
-import { IsOptional, IsBoolean, IsString, IsArray, IsNotEmpty } from 'class-validator';
+import { IsOptional, IsBoolean, IsString, IsArray, IsNotEmpty, IsIn } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { PaginationDto } from './pagination.dto';
 
@@ -26,5 +26,13 @@ export class FilmFiltersDto extends PaginationDto {
     @IsNotEmpty({ each: true })
     @Transform(({ value }) => (value.map((genre: string) => genre.toLowerCase())))
     genres?: string[];
+
+    @IsOptional()
+    @IsIn(['name', 'averageScore', 'meScore', 'partnerScore'])
+    sort?: 'name' | 'averageScore' | 'meScore' | 'partnerScore';
+
+    @IsOptional()
+    @IsIn(['asc', 'desc'])
+    order?: 'asc' | 'desc';
 
 }

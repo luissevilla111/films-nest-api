@@ -10,6 +10,8 @@ import { AiService } from 'src/infrastructure/ai/ai.service';
 import { normalizeFilmName } from 'src/shared/helpers/text.helpers';
 import { calculateAverageDownToOneDecimal } from 'src/shared/helpers/math.helper';
 import { FilmFiltersDto } from './dto/filter.dto';
+import { buildFilmQuery } from './helpers/build-film-query.helper';
+import { buildFilmSort } from './helpers/build-film-sort.helper';
 @Injectable()
 export class FilmsService {
   constructor(
@@ -64,39 +66,13 @@ export class FilmsService {
   }
 
   async findAll(filters: FilmFiltersDto) {
-    const { page, pageSize, isWatched, recommendatedBy, owner, genres } = filters;
+    const { page, pageSize } = filters;
     const pageSizeValue = pageSize ?? 20;
     const pageValue = page ?? 1;
     const skip = (pageValue - 1) * pageSizeValue;
 
-    console.log(filters);
-
-    console.log({ pageSizeValue });
-    console.log({ pageValue });
-    console.log({ skip });
-
-    const query: any = {};
-
-    if (isWatched !== undefined) {
-      query.isWatched = isWatched;
-
-    }
-
-    if (recommendatedBy !== undefined) {
-      query.recommendatedBy = recommendatedBy;
-    }
-
-    if (owner !== undefined) {
-      query.owner = owner;
-
-    }
-
-    if (genres?.length) {
-      query.genres = { $in: genres };
-    }
-
-
-    console.log(query);
+    const query = buildFilmQuery(filters);
+    const sort = buildFilmSort(filters);
 
     const [films, totalItems] = await Promise.all([
       this.filmModel
@@ -104,6 +80,7 @@ export class FilmsService {
         .select('-__v')
         .skip(skip)
         .limit(pageSizeValue)
+        .sort(sort)
         .exec(),
 
       this.filmModel.countDocuments(query),

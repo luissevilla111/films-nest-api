@@ -50,5 +50,14 @@ export class Film extends Document {
 
   @Prop({ required: true, type: String, default: 'cinema' })
   group: string;
+
+  @Prop({ required: true, type: Number, default: 0 })
+  averageScore: number;
+
+  @Prop({ required: true, type: Number, default: 0 })
+  meScore: number;
+
+  @Prop({ required: true, type: Number, default: 0 })
+  partnerScore: number;
 }
 export const FilmSchema = SchemaFactory.createForClass(Film);
