@@ -7,3 +7,15 @@ export const normalizeCase = (text: string): string => {
     .map((word) => word.charAt(0).toLocaleUpperCase('es-MX') + word.slice(1))
     .join(' ');
 };
+
+export const removeSpaces = (text: string): string => {
+  return text.replace(/\s+/g, '');
+};
+
+export const replaceSpecialCharacters = (text: string): string => {
+  return text.replace(/[^a-zA-Z0-9]/g, '-');
+};
+
+export const normalizeFilmName = (text: string): string => {
+  return removeSpaces(replaceSpecialCharacters(text.toLowerCase()));
+};

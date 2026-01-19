@@ -13,7 +13,7 @@ import {
   IsNumber,
   IsEnum,
 } from 'class-validator';
-import { normalizeArrayFormValue } from 'src/features/helpers/string.transform';
+import { normalizeArrayFormValue, normalizeKeyWords } from 'src/features/helpers/string.transform';
 import { IsDateFormat } from 'src/shared/decorators/is-date-format.decorator';
 import { normalizeCase } from 'src/shared/helpers/text.helpers';
 
@@ -56,11 +56,10 @@ export class CreateFilmDto {
   @IsOptional()
   duration?: number;
 
-  @IsOptional()
   @IsString()
   @IsNotEmpty()
   @MaxLength(2000)
-  description?: string;
+  description: string;
 
   @IsArray()
   @ArrayMinSize(MIN_GENRES)
@@ -109,7 +108,7 @@ export class CreateFilmDto {
   @IsString({ each: true })
   @IsNotEmpty({ each: true })
   @ArrayMinSize(MIN_KEYWORDS)
-  @Transform(({ value }) => normalizeArrayFormValue(value))
+  @Transform(({ value }) => normalizeKeyWords(value))
   keywords: string[];
 
   @IsOptional()

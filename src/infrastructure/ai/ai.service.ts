@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { Model } from 'mongoose';
 import { AiPrompt } from './entity/ai-prompt.entity';
 import { InjectModel } from '@nestjs/mongoose';
@@ -18,15 +22,25 @@ export class AiService {
   }
   async generateFilmDescription(
     filmName: string,
-    additionalContext?: Record<string, any>,
-  ): Promise<string> {
+  ): Promise<{ description: string }> {
     const promptType = PROMPT_TYPES.FILM_DESCRIPTION;
-    const prompt = await this.getPrompt(promptType);
-    if (!prompt) {
-      throw new NotFoundException('Prompt not found');
+    const promptObject = await this.getPrompt(promptType);
+    const userPrompt = promptObject.userPrompt.replace(
+      '{{filmName}}',
+      filmName,
+    );
+    //console.log(promptObject);
+    //return userPrompt;
+    const response = await this.executeBasicPrompt(
+      promptObject.systemPrompt,
+      userPrompt,
+    );
+
+    if (!response) {
+      throw new InternalServerErrorException('Error generating description');
     }
-    // Por ahora retorna un placeholder
-    return `Descripción generada por AI para: ${filmName}`;
+
+    return { description: response };
   }
 
   private async getPrompt(promptType: string) {
@@ -36,7 +50,10 @@ export class AiService {
     if (!promptCollection) {
       throw new NotFoundException('Prompt not found');
     }
-    return promptCollection.prompt;
+    return {
+      systemPrompt: promptCollection.systemPrompt,
+      userPrompt: promptCollection.userPrompt,
+    };
   }
 
   private async executeBasicPrompt(systemPrompt: string, userPrompt: string) {

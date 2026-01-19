@@ -8,6 +8,10 @@ export class S3Service {
   private readonly bucket: string;
 
   constructor(private readonly config: ConfigService) {
+    console.log(this.config.get('AWS_REGION'));
+    console.log(this.config.get('AWS_ACCESS_KEY_ID'));
+    console.log(this.config.get('AWS_SECRET_ACCESS_KEY'));
+    console.log(this.config.get('AWS_S3_BUCKET'));
     this.s3 = new S3Client({
       region: this.config.get('AWS_REGION') || 'us-east-1',
       credentials: {
@@ -20,11 +24,14 @@ export class S3Service {
   }
 
   async putObject(
-    key: string,
+    folder: string,
+    fileName: string,
     file: Buffer,
     contentType: string,
   ): Promise<string> {
     try {
+      const key = `${folder}/${fileName}`;
+
       await this.s3.send(
         new PutObjectCommand({
           Bucket: this.bucket,

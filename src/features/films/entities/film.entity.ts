@@ -30,8 +30,8 @@ export class Film extends Document {
   @Prop({ required: false, type: Number })
   duration?: number;
 
-  @Prop({ required: true, type: String, default: '' })
-  watchedDay: string;
+  @Prop({ required: false, type: String, default: '' })
+  watchedDay?: string;
 
   @Prop({ required: false, type: String })
   recommendatedBy?: string;
