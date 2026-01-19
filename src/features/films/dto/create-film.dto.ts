@@ -33,8 +33,8 @@ const MIN_ALTERNATIVE_NAMES = 1;
 const MAX_ALTERNATIVE_NAMES = 3;
 
 export enum FilmOwner {
-  Me = 'Me',
-  Partner = 'Partner',
+  Me = 'me',
+  Partner = 'partner',
 }
 
 export class CreateFilmDto {

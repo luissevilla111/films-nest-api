@@ -8,6 +8,7 @@ import {
   Delete,
   UseInterceptors,
   UploadedFile,
+  Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FilmsService } from './films.service';
@@ -16,10 +17,12 @@ import { UpdateFilmDto } from './dto/update-film.dto';
 import { FileValidationPipe } from './pipes/file-validation.pipe';
 import { UploadedFile as UploadedFileType } from './types/file.type';
 import { GenerateDescriptionDto } from './dto/generate-description.dto';
+import { PaginationDto } from './dto/pagination.dto';
+import { FilmFiltersDto } from './dto/filter.dto';
 
 @Controller('films')
 export class FilmsController {
-  constructor(private readonly filmsService: FilmsService) {}
+  constructor(private readonly filmsService: FilmsService) { }
 
   @Post('generate-description')
   generateDescription(@Body() dto: GenerateDescriptionDto) {
@@ -37,8 +40,9 @@ export class FilmsController {
   }
 
   @Get()
-  findAll() {
-    return this.filmsService.findAll();
+  async findAll(@Query() filters: FilmFiltersDto) {
+
+    return await this.filmsService.findAll(filters);
   }
 
   @Get(':id')
