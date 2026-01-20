@@ -12,13 +12,14 @@ import { calculateAverageDownToOneDecimal } from 'src/shared/helpers/math.helper
 import { FilmFiltersDto } from './dto/filter.dto';
 import { buildFilmQuery } from './helpers/build-film-query.helper';
 import { buildFilmSort } from './helpers/build-film-sort.helper';
+import { stringToDateDDMMYYYY } from 'src/shared/helpers/dates.helpers';
 @Injectable()
 export class FilmsService {
   constructor(
     @InjectModel(Film.name) private filmModel: Model<Film>,
     private readonly s3: S3Service,
     private readonly aiService: AiService,
-  ) { }
+  ) {}
 
   async create(createFilmDto: CreateFilmDto, file: UploadedFile) {
     //console.log(createFilmDto);
@@ -37,13 +38,17 @@ export class FilmsService {
 
     const addedBy = 'cognitoUserId';
     const isWatched = createFilmDto.watchedDay ? true : false;
-
+    const watchedDayDate = createFilmDto.watchedDay
+      ? stringToDateDDMMYYYY(createFilmDto.watchedDay)
+      : undefined;
+    console.log(watchedDayDate);
     const newFilm = {
       ...createFilmDto,
       imageUrl,
       averageScore,
       addedBy,
       isWatched,
+      watchedDayDate,
     };
     const createdFilm = await this.filmModel.create(newFilm);
 
@@ -74,10 +79,15 @@ export class FilmsService {
     const query = buildFilmQuery(filters);
     const sort = buildFilmSort(filters);
 
+    console.log(sort);
+    console.log('--------------------------------');
+    console.log(query);
+    console.log('--------------------------------');
+
     const [films, totalItems] = await Promise.all([
       this.filmModel
         .find(query)
-        .select('-__v')
+        .select(['name', 'meScore'])
         .skip(skip)
         .limit(pageSizeValue)
         .sort(sort)
@@ -97,9 +107,9 @@ export class FilmsService {
     };
   }
 
-  findOne(id: number) { }
+  findOne(id: number) {}
 
-  update(id: number, updateFilmDto: UpdateFilmDto) { }
+  update(id: number, updateFilmDto: UpdateFilmDto) {}
 
-  remove(id: number) { }
+  remove(id: number) {}
 }

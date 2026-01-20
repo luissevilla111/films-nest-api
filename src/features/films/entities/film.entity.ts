@@ -33,6 +33,9 @@ export class Film extends Document {
   @Prop({ required: false, type: String, default: '' })
   watchedDay?: string;
 
+  @Prop({ required: false, type: Date })
+  watchedDayDate?: Date;
+
   @Prop({ required: false, type: String })
   recommendatedBy?: string;
 
