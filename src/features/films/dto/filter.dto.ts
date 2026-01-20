@@ -32,8 +32,13 @@ export class FilmFiltersDto extends PaginationDto {
   genres?: string[];
 
   @IsOptional()
-  @IsIn(['name', 'averageScore', 'meScore', 'partnerScore'])
-  sort?: 'name' | 'averageScore' | 'meScore' | 'partnerScore';
+  @IsIn(['name', 'averageScore', 'meScore', 'partnerScore', 'watchedDayDate'])
+  sort?:
+    | 'name'
+    | 'averageScore'
+    | 'meScore'
+    | 'partnerScore'
+    | 'watchedDayDate';
 
   @IsOptional()
   @IsIn(['asc', 'desc'])

@@ -79,15 +79,10 @@ export class FilmsService {
     const query = buildFilmQuery(filters);
     const sort = buildFilmSort(filters);
 
-    console.log(sort);
-    console.log('--------------------------------');
-    console.log(query);
-    console.log('--------------------------------');
-
     const [films, totalItems] = await Promise.all([
       this.filmModel
         .find(query)
-        .select(['name', 'meScore'])
+        .select(['-__v'])
         .skip(skip)
         .limit(pageSizeValue)
         .sort(sort)
