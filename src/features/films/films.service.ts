@@ -13,6 +13,7 @@ import { FilmFiltersDto } from './dto/filter.dto';
 import { buildFilmQuery } from './helpers/build-film-query.helper';
 import { buildFilmSort } from './helpers/build-film-sort.helper';
 import { stringToDateDDMMYYYY } from 'src/shared/helpers/dates.helpers';
+import { SearchDto } from './dto/search.dto';
 @Injectable()
 export class FilmsService {
   constructor(
@@ -102,24 +103,23 @@ export class FilmsService {
     };
   }
 
-  async autocomplete(search: string) {
-    console.log(search);
+  async autocomplete(searchDto: SearchDto) {
+    const { search } = searchDto;
+
     if (!search) {
       return [];
     }
 
     const normalized = search;
+    const regex = new RegExp(normalized, 'i'); // 'i' para case-insensitive
+
     return await this.filmModel.find({
       $or: [
-        {
-          $or: [
-            { name: { $regex: `^${normalized}` } },
-            { keywords: { $regex: `^${normalized}` } },
-            { alternativeNames: { $regex: `^${normalized}` } },
-          ],
-        },
+        { name: regex },
+        { keywords: regex },
+        { alternativeNames: regex },
       ],
-    });
+    }).limit(10).exec();
   }
 
   findOne(id: number) { }

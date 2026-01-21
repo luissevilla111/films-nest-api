@@ -19,3 +19,12 @@ export const replaceSpecialCharacters = (text: string): string => {
 export const normalizeFilmName = (text: string): string => {
   return removeSpaces(replaceSpecialCharacters(text.toLowerCase()));
 };
+
+export const normalizeText = (text: string): string => {
+  if (!text) return '';
+  return text
+    .trim()
+    .replace(/\s+/g, ' ')
+    .toLocaleLowerCase();
+};
+

@@ -15,10 +15,11 @@ import {
 } from 'class-validator';
 import {
   normalizeArrayFormValue,
+  normalizeArrayLowerCase,
   normalizeKeyWords,
 } from 'src/features/helpers/string.transform';
 import { IsDateFormat } from 'src/shared/decorators/is-date-format.decorator';
-import { normalizeCase } from 'src/shared/helpers/text.helpers';
+import { normalizeCase, normalizeText } from 'src/shared/helpers/text.helpers';
 
 const yearSpace = 2;
 const MAX_YEAR_LAUNCH = new Date().getFullYear() + yearSpace;
@@ -44,7 +45,7 @@ export class CreateFilmDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(150)
-  @Transform(({ value }) => normalizeCase(value))
+  @Transform(({ value }) => normalizeText(value))
   name: string;
 
   @Transform(({ value }) => +value)
@@ -78,7 +79,7 @@ export class CreateFilmDto {
   @ArrayMaxSize(MAX_ACTORS)
   @IsString({ each: true })
   @IsNotEmpty({ each: true })
-  @Transform(({ value }) => normalizeArrayFormValue(value))
+  @Transform(({ value }) => normalizeArrayLowerCase(value))
   actors?: string[];
 
   @IsString()
@@ -111,7 +112,7 @@ export class CreateFilmDto {
   @IsString({ each: true })
   @IsNotEmpty({ each: true })
   @ArrayMinSize(MIN_KEYWORDS)
-  @Transform(({ value }) => normalizeKeyWords(value))
+  @Transform(({ value }) => normalizeArrayLowerCase(value))
   keywords: string[];
 
   @IsOptional()
@@ -120,7 +121,7 @@ export class CreateFilmDto {
   @IsString({ each: true })
   @IsNotEmpty({ each: true })
   @ArrayMinSize(MIN_ALTERNATIVE_NAMES)
-  @Transform(({ value }) => normalizeArrayFormValue(value))
+  @Transform(({ value }) => normalizeArrayLowerCase(value))
   alternativeNames: string[];
 
   @IsEnum(FilmOwner)

@@ -19,6 +19,7 @@ import { UploadedFile as UploadedFileType } from './types/file.type';
 import { GenerateDescriptionDto } from './dto/generate-description.dto';
 import { PaginationDto } from './dto/pagination.dto';
 import { FilmFiltersDto } from './dto/filter.dto';
+import { SearchDto } from './dto/search.dto';
 
 @Controller('films')
 export class FilmsController {
@@ -40,8 +41,8 @@ export class FilmsController {
   }
 
   @Get('autocomplete')
-  async autocomplete(@Query('search') search: string) {
-    return await this.filmsService.autocomplete(search);
+  async autocomplete(@Query() searchDto: SearchDto) {
+    return await this.filmsService.autocomplete(searchDto);
   }
 
   @Get()
