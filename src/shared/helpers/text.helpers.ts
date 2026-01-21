@@ -25,6 +25,6 @@ export const normalizeText = (text: string): string => {
   return text
     .trim()
     .replace(/\s+/g, ' ')
-    .toLocaleLowerCase();
+    .toLocaleLowerCase('es-MX');
 };
 

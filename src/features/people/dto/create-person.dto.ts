@@ -3,7 +3,7 @@ import { IsString, MaxLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 import { IsNotEmpty } from 'class-validator';
-import { normalizeCase } from 'src/shared/helpers/text.helpers';
+import { normalizeText } from 'src/shared/helpers/text.helpers';
 
 export class CreatePersonDto {
   @ApiProperty({
@@ -15,6 +15,6 @@ export class CreatePersonDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(30)
-  @Transform(({ value }) => normalizeCase(value as string))
+  @Transform(({ value }) => normalizeText(value as string))
   name: string;
 }
