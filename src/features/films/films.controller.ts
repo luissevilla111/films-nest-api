@@ -39,9 +39,13 @@ export class FilmsController {
     return this.filmsService.create(createFilmDto, file);
   }
 
+  @Get('autocomplete')
+  async autocomplete(@Query('search') search: string) {
+    return await this.filmsService.autocomplete(search);
+  }
+
   @Get()
   async findAll(@Query() filters: FilmFiltersDto) {
-
     return await this.filmsService.findAll(filters);
   }
 

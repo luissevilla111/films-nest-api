@@ -18,10 +18,10 @@ export class Film extends Document {
   @Prop({ required: true, type: String })
   imageUrl: string;
 
-  @Prop({ required: true, type: [String] })
+  @Prop({ required: true, type: [String], index: true })
   keywords: string[];
 
-  @Prop({ required: true, type: [String] })
+  @Prop({ required: true, type: [String], index: true })
   alternativeNames: string[];
 
   @Prop({ required: true, type: [String] })
@@ -64,3 +64,8 @@ export class Film extends Document {
   partnerScore: number;
 }
 export const FilmSchema = SchemaFactory.createForClass(Film);
+
+FilmSchema.index(
+  { keywords: 1, alternativeNames: 1 },
+  { default_language: 'spanish' },
+);

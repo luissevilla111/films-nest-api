@@ -19,7 +19,7 @@ export class FilmsService {
     @InjectModel(Film.name) private filmModel: Model<Film>,
     private readonly s3: S3Service,
     private readonly aiService: AiService,
-  ) {}
+  ) { }
 
   async create(createFilmDto: CreateFilmDto, file: UploadedFile) {
     //console.log(createFilmDto);
@@ -102,9 +102,29 @@ export class FilmsService {
     };
   }
 
-  findOne(id: number) {}
+  async autocomplete(search: string) {
+    console.log(search);
+    if (!search) {
+      return [];
+    }
 
-  update(id: number, updateFilmDto: UpdateFilmDto) {}
+    const normalized = search;
+    return await this.filmModel.find({
+      $or: [
+        {
+          $or: [
+            { name: { $regex: `^${normalized}` } },
+            { keywords: { $regex: `^${normalized}` } },
+            { alternativeNames: { $regex: `^${normalized}` } },
+          ],
+        },
+      ],
+    });
+  }
 
-  remove(id: number) {}
+  findOne(id: number) { }
+
+  update(id: number, updateFilmDto: UpdateFilmDto) { }
+
+  remove(id: number) { }
 }
