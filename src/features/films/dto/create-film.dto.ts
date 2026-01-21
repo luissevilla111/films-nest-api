@@ -99,13 +99,13 @@ export class CreateFilmDto {
   @Min(MIN_SCORE)
   @Max(MAX_SCORE)
   @Transform(({ value }) => +value)
-  meScore: number;
+  angelScore: number;
 
   @IsNumber()
   @Min(MIN_SCORE)
   @Max(MAX_SCORE)
   @Transform(({ value }) => +value)
-  partnerScore: number;
+  selvaScore: number;
 
   @IsArray()
   @ArrayMaxSize(MAX_KEYWORDS)

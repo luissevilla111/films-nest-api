@@ -33,8 +33,8 @@ export class FilmsService {
     );
 
     const averageScore = calculateAverageDownToOneDecimal(
-      createFilmDto.meScore,
-      createFilmDto.partnerScore,
+      createFilmDto.angelScore,
+      createFilmDto.selvaScore,
     );
 
     const addedBy = 'cognitoUserId';
