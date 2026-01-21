@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateFilmDto } from './dto/create-film.dto';
 import { UpdateFilmDto } from './dto/update-film.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -124,7 +124,67 @@ export class FilmsService {
 
   findOne(id: number) { }
 
-  update(id: number, updateFilmDto: UpdateFilmDto) { }
+  async findById(id: string) {
+    const film = await this.filmModel.findById(id);
+    if (!film) {
+      throw new NotFoundException(`Película con id ${id} no encontrada`);
+    }
+    return film;
+  }
 
-  remove(id: number) { }
+  async update(
+    id: string,
+    updateFilmDto: UpdateFilmDto,
+    file?: UploadedFile,
+  ) {
+    // Buscar la película existente
+    const existingFilm = await this.findById(id);
+
+    // Preparar los datos de actualización
+    const updateData: any = { ...updateFilmDto };
+
+    // Si viene un archivo, subirlo a S3 y actualizar la URL
+    if (file) {
+      const imageUrl = await this.s3.putObject(
+        'films/covers',
+        normalizeFilmName(file.originalname?.toLowerCase()),
+        file.buffer,
+        file.mimetype,
+      );
+      updateData.imageUrl = imageUrl;
+    }
+    // Si no viene archivo, mantener el imageUrl existente (no se incluye en updateData)
+
+    // Calcular averageScore si vienen los scores
+    if (updateFilmDto.angelScore !== undefined || updateFilmDto.selvaScore !== undefined) {
+      const angelScore = updateFilmDto.angelScore ?? existingFilm.angelScore;
+      const selvaScore = updateFilmDto.selvaScore ?? existingFilm.selvaScore;
+      updateData.averageScore = calculateAverageDownToOneDecimal(
+        angelScore,
+        selvaScore,
+      );
+    }
+
+    // Manejar watchedDay si viene
+    if (updateFilmDto.watchedDay) {
+      updateData.isWatched = updateFilmDto.watchedDay ? true : false;
+      updateData.watchedDayDate = updateFilmDto.watchedDay
+        ? stringToDateDDMMYYYY(updateFilmDto.watchedDay)
+        : undefined;
+    }
+
+    // Actualizar la película
+    const updatedFilm = await this.filmModel
+      .findByIdAndUpdate(id, updateData, { new: true })
+      .exec();
+
+    return updatedFilm;
+  }
+
+  async remove(id: string) {
+    const existingFilm = await this.findById(id);
+
+    await existingFilm.deleteOne();
+    return { message: 'Film deleted successfully' };
+  }
 }
